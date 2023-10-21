@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>记录.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Page Update="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Remove="obj\**" />
+    <Page Remove="Views\Widgets\AlertDialog.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="HandyControl" Version="3.4.0" />
+    <PackageReference Include="Mantin.Controls.Wpf.EnumComboBox" Version="6.0.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="VideoTimecode" Version="1.0.1" />
+    <PackageReference Include="z440.atl.core" Version="5.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="obj\Debug\net7.0-windows\VoiSlateParser.AssemblyInfoInputs.cache" />
+    <Content Include="obj\Debug\net7.0-windows\VoiSlateParser.assets.cache" />
+    <Content Include="obj\Debug\net7.0-windows\VoiSlateParser.csproj.AssemblyReference.cache" />
+    <Content Include="obj\Debug\net7.0-windows\VoiSlateParser.GeneratedMSBuildEditorConfig.editorconfig" />
+    <Content Include="obj\project.assets.json" />
+    <Content Include="obj\project.nuget.cache" />
+    <Content Include="obj\project.packagespec.json" />
+    <Content Include="obj\rider.project.restore.info" />
+    <Content Include="obj\VoiSlateParser.csproj.nuget.dgspec.json" />
+    <Content Include="obj\VoiSlateParser.csproj.nuget.g.props" />
+    <Content Include="obj\VoiSlateParser.csproj.nuget.g.targets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="obj\Debug\net7.0-windows\.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\App.g.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\App.g.i.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\MainWindow.g.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\MainWindow.g.i.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\Views\MainWindow.g.cs" />
+    <Compile Include="obj\Debug\net7.0-windows\VoiSlateParser.AssemblyInfo.cs" />
+    <Compile Remove="obj\**" />
+    <Compile Remove="Views\Widgets\AlertDialog.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="obj\Debug\net7.0-windows\ref" />
+    <Folder Include="obj\Debug\net7.0-windows\refint" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="data.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="bin\Debug\net7.0-windows\test_data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <None Remove="test_data.json" />
+    <AdditionalFiles Include="test_data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,30 @@
+[
+ {
+  "scn": "1A",
+  "sht": "3C",
+  "tk": 4,
+  "filenamePrefix": "230606",
+  "filenameLinker": "-T",
+  "filenameNum": 1,
+  "tkNote": "单调奶奶",
+  "shtNote": "缪尔赛斯向塞雷娅介绍生态园",
+  "scnNote": "三人会面，缪尔赛斯提出了她的计划，塞雷娅和克里斯滕都表示了支持。",
+  "okTk": "notChecked",
+  "okSht": "notChecked",
+  "fileName": "230606-T1"
+ },
+ {
+  "scn": "1A",
+  "sht": "3C",
+  "tk": 5,
+  "filenamePrefix": "230606",
+  "filenameLinker": "-T",
+  "filenameNum": 2,
+  "tkNote": "S1A Sh3CT6",
+  "shtNote": "缪尔赛斯向塞雷娅介绍生态园",
+  "scnNote": "三人会面，缪尔赛斯提出了她的计划，塞雷娅和克里斯滕都表示了支持。",
+  "okTk": "ok",
+  "okSht": "ok",
+  "fileName": "230606-T2"
+ }
+]
