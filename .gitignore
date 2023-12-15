@@ -51,6 +51,6 @@ pubspec.lock
 src/lib/models/slate_log_item.g.dart
 src/lib/main.mapper.g.dart
 src/lib/models/slate_schedule.g.dart
-src/SyncToy_ea8cfe98-920a-4bb8-b874-599d8b9c3810.dat
+SyncToy*.dat
 VoiSlateParser/bin/*
 VoiSlateParser/obj/*

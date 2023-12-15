@@ -60,6 +60,14 @@
                 Clicked="OnWriteClicked"
                 HorizontalOptions="Center" />
 
+
+            <!--<Button
+                x:Name="WriteToSDBtn"
+                Text="复制回sd卡"
+                SemanticProperties.Hint="复制所有文件夹中的文件，并写入录音元数据"
+                Clicked="WriteToSDBtn_Clicked"
+                HorizontalOptions="Center" />-->
+
         </VerticalStackLayout>
     </ScrollView>
 

@@ -14,9 +14,9 @@ namespace VoiSlaui
     public partial class SafService
     {
         public partial void ShowUriBrowser();
-        public partial void CopyToExternalStorage(string intPath, string fname);
+        public partial void PasteFile(string backupFolder, string fname, Uri destinyUri);
         public partial void CopyAllFromExternalStorage(string desPath);
-        public partial DocumentFile GetDirectoryPath();
+        public partial void PasteAllToExternalStorage(string desPath);
     }
 #endif
 

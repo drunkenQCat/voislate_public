@@ -3,7 +3,10 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using PortableStorage.Droid;
+using Intent = Android.Content.Intent;
+using static Microsoft.Maui.ApplicationModel.Platform;
 
 namespace VoiSlaui;
 

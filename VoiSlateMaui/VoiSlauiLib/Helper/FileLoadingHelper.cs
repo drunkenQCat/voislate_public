@@ -154,7 +154,17 @@ public class FileLoadingHelper
         // find if without linker, is there any possible file
         if (!query.Any())
         {
-            Regex ambigReg = new($".*{item.filenamePrefix}.*{item.filenameNum.ToString().PadLeft(3, '0')}.(wav|WAV|Wav).*");
+            Regex ambigReg = new($".*{item.filenamePrefix}.*{item.filenameNum}");
+            query =
+                from info in WavList
+                where ambigReg.IsMatch(info.Name)
+                orderby info.Name
+                select info;
+        }
+        // For sound devices
+        if (!query.Any())
+        {
+            Regex ambigReg = new($".*{item.filenamePrefix}.*{item.filenameNum.ToString().PadLeft(2, '0')}");
             query =
                 from info in WavList
                 where ambigReg.IsMatch(info.Name)
