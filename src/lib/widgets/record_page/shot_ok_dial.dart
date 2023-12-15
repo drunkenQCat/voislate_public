@@ -33,7 +33,7 @@ class _ShotOkDialState extends State<ShotOkDial> {
   Color _getShtStatusColor(ShtStatus status) {
     switch (status) {
       case ShtStatus.notChecked: // changed enum name to TkStatus.notChecked
-        return Colors.grey;
+        return const Color(0xFFF2F5DE);
       case ShtStatus.ok: // changed enum name to TkStatus.ok
         return Colors.blue;
       case ShtStatus.nice: // changed enum name to TkStatus.nice

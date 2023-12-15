@@ -38,7 +38,7 @@ class _TakeOkDialState extends State<TakeOkDial> {
   Color _getTkStatusColor(TkStatus status) {
     switch (status) {
       case TkStatus.notChecked: // changed enum name to TkStatus.notChecked
-        return Colors.grey;
+        return const Color(0xFFF2F5DE);
       case TkStatus.ok: // changed enum name to TkStatus.ok
         return Colors.green;
       case TkStatus.bad: // changed enum name to TkStatus.nice

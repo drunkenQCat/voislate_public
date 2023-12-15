@@ -13,20 +13,20 @@ class RecordFileNum {
   }
 
   String intervalSymbol;
-  final _valueController = StreamController<int>();
-  Stream<int> get value => _valueController.stream;
+  final valueController = StreamController<int>.broadcast();
+  Stream<int> get value => valueController.stream.asBroadcastStream();
 
   int _number = 1;
   int get number => _number;
 
   void setValue(int newValue) {
     _number = newValue;
-    _valueController.sink.add(_number);
+    valueController.sink.add(_number);
   }
 
   int increment() {
     _number++;
-    _valueController.sink.add(_number);
+    valueController.sink.add(_number);
     return _number;
   }
 
@@ -35,12 +35,12 @@ class RecordFileNum {
     if (_number - 1 < 1) return _number;
 
     _number--;
-    _valueController.sink.add(_number);
+    valueController.sink.add(_number);
     return _number;
   }
 
   void dispose() {
-    _valueController.close();
+    valueController.close();
   }
 
   String fullName() {

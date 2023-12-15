@@ -17,6 +17,7 @@ class DisplayNotesButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      backgroundColor: const Color(0xFF8EB1C7),
       heroTag: 'display_notes',
       onPressed: () {
         showDialog(

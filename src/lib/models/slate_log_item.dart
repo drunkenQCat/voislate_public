@@ -3,7 +3,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 part 'slate_log_item.g.dart';
 
-/// The status of the file. 
+/// The status of the file.
 /// * 0: not checked
 /// * 1: ok
 /// * 2: bad
@@ -48,9 +48,12 @@ class SlateLogItem {
   String filenameLinker;
   @HiveField(5)
   int filenameNum;
-  String get fileName{
-    return filenamePrefix + filenameLinker + filenameNum.toString().padLeft(3,'0');
+  String get fileName {
+    return filenamePrefix +
+        filenameLinker +
+        filenameNum.toString().padLeft(3, '0');
   }
+
   @HiveField(6)
   String tkNote;
   @HiveField(7)

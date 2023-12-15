@@ -35,6 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dart_json_mapper: ^2.2.9
   double_back_to_close_app: ^2.1.0
+  file_picker: ^6.0.0
   flex_color_scheme: ^7.2.0
   flex_seed_scheme: ^1.4.0
   flutter:
@@ -48,11 +49,8 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.0
   ifly_speech_recognition:
-    # 要build的时候注释掉这条，用github的源
     path: ../ifly_speech_recognition
-    # git:
-    #   url: https://github.com/drunkenQCat/ifly_speech_recognition.git
-    #   ref: dev
+  path_provider: ^2.1.1
   permission_handler: ^10.2.0
   provider: ^6.0.5
   record: ^4.4.4

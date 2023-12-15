@@ -150,8 +150,34 @@ class _NoteEditorState extends State<NoteEditor> {
             : const SizedBox(),
         ElevatedButton(
           onPressed: () {
-            util.saveChanges(newInfo);
-            Navigator.of(context).pop();
+            try {
+              if (!isScene) {
+                util._dupDetectForModifyingShot(newInfo);
+              } else {
+                util._dupDetectForModifyingScn(newInfo);
+              }
+              util.saveChanges(newInfo);
+              Navigator.of(context).pop();
+            } on DuplicateItemException catch (e) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // 返回一个 Alert 对话框
+                    return AlertDialog(
+                      title: Text('${isScene ? '场' : '镜'}号重复'),
+                      content: Text('$e,请选择另外不重复的序号'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            // 点击按钮后关闭对话框
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('明白'),
+                        ),
+                      ],
+                    );
+                  });
+            }
           },
           child: const Text('保存'),
         ),
@@ -315,23 +341,37 @@ class ScheduleUtils {
     isScene = currentShtIndex == null;
   }
 
-  void _dupSceneDetect(SceneSchedule newScene) {
+  void _dupDetectForModifyingScn(ScheduleItem newScene) {
     var detectorList = scenes.map((scene) => scene.info.name).toList();
-    for (var name in detectorList) {
-      if (newScene.info.name == name) {
-        throw DuplicateItemException('本场号已存在');
-      }
-    }
+    detectorList.add(newScene.name);
+    final dupCount = detectorList.where((name) => newScene.name == name).length;
+    if (dupCount > 1) throw DuplicateItemException('本镜号已存在');
   }
 
-  void _dupShotDetect(ScheduleItem newShot) {
-    var detectorList =
+  void _dupDetectForNewScn(SceneSchedule newSceneInfo) {
+    var detectorList = scenes.map((scene) => scene.info.name).toList();
+    detectorList.removeAt(currentScnIndex);
+    detectorList.add(newSceneInfo.info.name);
+    final dupCount =
+        detectorList.where((name) => newSceneInfo.info.name == name).length;
+    if (dupCount > 1) throw DuplicateItemException('本镜号已存在');
+  }
+
+  void _dupDetectForNewShot(ScheduleItem newShot) {
+    final detectorList =
         scenes[currentScnIndex].data.map((shot) => shot.name).toList();
-    for (var name in detectorList) {
-      if (newShot.name == name) {
-        throw DuplicateItemException('本镜号已存在');
-      }
-    }
+    detectorList.add(newShot.name);
+    final dupCount = detectorList.where((name) => newShot.name == name).length;
+    if (dupCount > 1) throw DuplicateItemException('本镜号已存在');
+  }
+
+  void _dupDetectForModifyingShot(ScheduleItem newShot) {
+    final detectorList =
+        scenes[currentScnIndex].data.map((shot) => shot.name).toList();
+    detectorList.removeAt(currentShtIndex ?? detectorList.length - 1);
+    detectorList.add(newShot.name);
+    final dupCount = detectorList.where((name) => newShot.name == name).length;
+    if (dupCount > 1) throw DuplicateItemException('本镜号已存在');
   }
 
   String _findFix(List<String> alphas, bool after) {
@@ -385,7 +425,7 @@ class ScheduleUtils {
     if (isScene) {
       var newScene = SceneSchedule([newShot], newInfo);
       try {
-        _dupSceneDetect(newScene);
+        _dupDetectForNewScn(newScene);
       } on DuplicateItemException {
         List<int> keys =
             scenes.map((scene) => int.tryParse(scene.info.key) ?? 0).toList();
@@ -402,7 +442,7 @@ class ScheduleUtils {
           : scenes.insert(currentScnIndex + plusIndex, newScene);
     } else {
       try {
-        _dupShotDetect(newInfo);
+        _dupDetectForNewShot(newInfo);
       } on Exception catch (e) {
         debugPrint(e.toString());
         List<int> keys = scenes[currentScnIndex]

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:voislate/providers/slate_status_notifier.dart';
 
 import 'slate_picker_notifier.dart';
 
@@ -11,6 +12,7 @@ class ScrollValueController<T extends SlatePickerState> {
   VoidCallback? inc;
   VoidCallback? dec;
   final T col;
+  SlateStatusNotifier slateNotifier;
 
   ScrollValueController({
     required this.context,
@@ -18,6 +20,7 @@ class ScrollValueController<T extends SlatePickerState> {
     this.inc,
     this.dec,
     required this.col,
+    required this.slateNotifier
   });
 
   String getPrevTk() {
@@ -32,6 +35,9 @@ class ScrollValueController<T extends SlatePickerState> {
     inc?.call();
     textCon.clear();
     col.scrollToNext(isLinked);
+    slateNotifier.setIndex(
+      take: col.selectedIndex,
+    );
   }
 
   void valueDec(bool isLinked) {

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 
 abstract class SlatePickerState with ChangeNotifier {
   final FixedExtentScrollController controller = FixedExtentScrollController();
-  var _numList = <String>['1','2'];
+  var _numList = <String>['1', '2'];
   var _selectedIndex = 0;
   get selectedIndex => _selectedIndex;
   set selectedIndex(value) {
     _selectedIndex = value;
     notifyListeners();
   }
+
   get selected => numList[selectedIndex];
   get numList => _numList;
   set numList(value) {
@@ -25,27 +26,31 @@ abstract class SlatePickerState with ChangeNotifier {
   /// initiallize the list of column and selectedIndex.
   /// if no input, just jump the selectedIndex to 0.
   /// if inputlist is [], just use the default numList.
-  void init([int initialIndex = 0, List<String>? inputList ]) {
+  void init([int initialIndex = 0, List<String>? inputList]) {
     // controller = FixedExtentScrollController(initialItem: initialIndex);
-    if(inputList != null) numList = inputList;
+    if (inputList != null) numList = inputList;
+    if (initialIndex >= numList.length) initialIndex = 0;
     controller.jumpToItem(initialIndex);
     _selectedIndex = initialIndex;
   }
 
   void scrollSelectedTo(String value) {
     var index = numList.indexOf(value);
-    controller.animateToItem(index, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+    controller.animateToItem(index,
+        duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
     _selectedIndex = index;
     notifyListeners();
   }
-  
+
   void scrollSelectedToIndex(int index) {
-    controller.animateToItem(index, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+    controller.animateToItem(index,
+        duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
     _selectedIndex = index;
     notifyListeners();
   }
+
   void scrollToNext(bool isLink) {
-    if(selected == numList.last) return;
+    if (selected == numList.last) return;
 
     if (isLink && _selectedIndex + 1 < numList.length) {
       _selectedIndex++;
@@ -53,16 +58,19 @@ abstract class SlatePickerState with ChangeNotifier {
     }
   }
 
-  void scrollToPrev(bool isLink){
+  void scrollToPrev(bool isLink) {
     if (_selectedIndex == 0) return;
 
     _selectedIndex--;
-    if (_selectedIndex< 0) {
+    if (_selectedIndex < 0) {
       _selectedIndex = numList.length - 1;
     }
     if (isLink) scrollSelectedToIndex(_selectedIndex);
   }
 }
+
 class SlateColumnOne extends SlatePickerState {}
+
 class SlateColumnTwo extends SlatePickerState {}
+
 class SlateColumnThree extends SlatePickerState {}
