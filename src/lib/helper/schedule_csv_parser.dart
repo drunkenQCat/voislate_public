@@ -16,6 +16,8 @@ class ItemInfoExtractor {
   String type;
 
   ItemInfoExtractor({required this.num, required this.fix, required this.type});
+  @override
+  String toString() => "$num-$fix";
 }
 
 ScheduleItem spawnNewScnInfo(ItemInfoExtractor basicInfo, List<String> scnRow) {
@@ -25,7 +27,7 @@ ScheduleItem spawnNewScnInfo(ItemInfoExtractor basicInfo, List<String> scnRow) {
     Note(
       objects: ['Boom'],
       type: basicInfo.type,
-    append: getScnContent(scnRow) ?? "",
+      append: getScnContent(scnRow) ?? "",
     ),
   );
   return emptyScnInfo;
@@ -52,7 +54,7 @@ ItemInfoExtractor? getScnNumAndLocation(List<String> inputRow) {
 }
 
 ItemInfoExtractor? getShtNumAndType(List<String> inputRow) {
-  if (inputRow[0].isEmpty) return null;
+  if (inputRow[2].isEmpty) return null;
   var currentShtNum = getShtNum(inputRow) ?? "0";
   final shtNum = ItemInfoExtractor.numRegExp.stringMatch(currentShtNum) ?? "0";
   final shtFix = ItemInfoExtractor.fixRegExp.stringMatch(currentShtNum) ?? "";
@@ -62,7 +64,7 @@ ItemInfoExtractor? getShtNumAndType(List<String> inputRow) {
 }
 
 String? getScnContent(List<String> inputRow) =>
-    inputRow[1].isEmpty ? null : inputRow[1];
+    inputRow[1].isEmpty ? null : "${inputRow[1]}，${inputRow[3]}";
 String? getShtNum(List<String> inputRow) =>
     inputRow[2].isEmpty ? null : inputRow[2];
 String getShtType(List<String> inputRow) =>
@@ -72,23 +74,30 @@ String getShtAppend(List<String> inputRow) => inputRow[6];
 ScheduleItem getCurrentScnInfo(ScnMap m) => m.keys.first;
 SeperatedRows getCurrentShts(ScnMap m) => m.values.first;
 
-SeperatedTable devideScns(List<List<String>> csvData) {
+SeperatedTable divideScns(List<List<String>> csvData) {
   SeperatedTable result = [];
-  SeperatedRows currentList = [];
+  Set<String> processedInfo = <String>{}; // 用于跟踪处理过的scnBasicInfo
 
   for (List<String> row in csvData) {
-    var scnBasicInfo = getScnNumAndLocation(row);
-    if (row.isNotEmpty && scnBasicInfo != null) {
-      if (currentList.isNotEmpty) {
-        result.add(currentList);
-        currentList = [];
-      }
-    }
-    currentList.add(row);
-  }
+    if (row.isEmpty) continue; // 跳过空行
 
-  if (currentList.isNotEmpty) {
-    result.add(currentList);
+    var scnBasicInfo = getScnNumAndLocation(row);
+    var shtBasicInfo = getShtNumAndType(row);
+    if (scnBasicInfo == null && shtBasicInfo == null)
+      continue; // 跳过scn 和 sht 都为null的行
+    if (scnBasicInfo == null && shtBasicInfo != null && result.isNotEmpty) {
+      var lastScn = result.last;
+      lastScn.add(row);
+      continue;
+    }
+
+    // 转换scnBasicInfo为字符串形式，以便于在Set中比较
+    String infoKey = scnBasicInfo.toString();
+    if (processedInfo.contains(infoKey)) continue; // 如果已处理过此scnBasicInfo，跳过
+
+    // 如果是新的scnBasicInfo，添加到结果中并记录
+    processedInfo.add(infoKey);
+    result.add([row]); // 创建一个新的SeperatedRows并添加到result中
   }
 
   return result;
@@ -106,17 +115,30 @@ List<ScnMap> generateScns(SeperatedTable scnTable) {
 
 SceneSchedule generateNewScn(ScnMap inputMap) {
   var scnInfo = getCurrentScnInfo(inputMap);
-  var scnShtsText = getCurrentShts(inputMap);
-  List<ScheduleItem> currentShts = getShtList(scnShtsText);
+  var shotsRow = getCurrentShts(inputMap);
+  List<ScheduleItem> currentShts = getShtList(shotsRow);
   return SceneSchedule(currentShts, scnInfo);
 }
 
 List<ScheduleItem> getShtList(SeperatedRows scnShtsText) {
-  List<ScheduleItem> results = scnShtsText.map((item) {
-    var basicInfo = getShtNumAndType(item);
-    var newSht = spawnNewShtInfo(basicInfo!, item);
-    return newSht;
-  }).toList();
+  Set<String> uniqueKeys = {};
+  List<ScheduleItem> results = scnShtsText
+      .map((item) {
+        var basicInfo = getShtNumAndType(item);
+        if (basicInfo == null) return null;
+
+        String key = basicInfo.toString();
+        if (uniqueKeys.contains(key)) {
+          return null; // 如果已存在，则跳过
+        }
+        uniqueKeys.add(key); // 记录新的组合
+
+        return spawnNewShtInfo(basicInfo, item);
+      })
+      .where((item) => item != null)
+      .cast<ScheduleItem>()
+      .toList();
+
   return results;
 }
 
@@ -124,9 +146,10 @@ List<SceneSchedule> parseCSVData(String filePath) {
   final file = File(filePath);
   final csvString = file.readAsStringSync();
   final List<List<String>> csvData =
-      const CsvToListConverter().convert(csvString);
+      const CsvToListConverter().convert(csvString, shouldParseNumbers: false);
+  csvData.removeAt(0);
 
-  var seperatedTable = devideScns(csvData);
+  var seperatedTable = divideScns(csvData);
   var newScnMaps = generateScns(seperatedTable);
   var finalSchedule = newScnMaps.map((scn) => generateNewScn(scn)).toList();
 

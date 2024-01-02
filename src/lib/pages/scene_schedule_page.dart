@@ -1,6 +1,8 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:voislate/helper/schedule_csv_parser.dart';
 import 'package:voislate/providers/slate_status_notifier.dart';
 
 import '../models/slate_schedule.dart';
@@ -432,6 +434,7 @@ class SceneSchedulePageState extends State<SceneSchedulePage>
               ),
               Positioned(
                 bottom: 90,
+                right: -16,
                 child: ElevatedButton.icon(
                   onPressed: () {
                     var util = ScheduleUtils(
@@ -444,6 +447,30 @@ class SceneSchedulePageState extends State<SceneSchedulePage>
                   },
                   icon: const Icon(Icons.add_business_outlined),
                   label: const Text("镜头+"),
+                ),
+              ),
+              Positioned(
+                bottom: -16,
+                right: -16,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    // backupSlateLogs();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles();
+
+                    if (result != null) {
+                      var newScnList = parseCSVData(result.files.single.path!);
+                      setState(() {
+                        scenes = newScnList;
+                      });
+                      await _saveBox(
+                          newSchedule: newScnList.cast<SceneSchedule>());
+                    } else {
+                      print("No file selected");
+                    }
+                  },
+                  icon: const Icon(Icons.read_more_outlined),
+                  label: const Text("导入"),
                 ),
               )
             ],
@@ -458,10 +485,10 @@ class SceneSchedulePageState extends State<SceneSchedulePage>
     );
   }
 
-  Future<void> _saveBox() async {
+  Future<void> _saveBox({List<SceneSchedule>? newSchedule}) async {
     var box = Hive.box('scenes_box');
     await box.clear();
-    await box.addAll(scenes);
+    await box.addAll(newSchedule ?? scenes);
   }
 
   Future<void> _openBox() async {

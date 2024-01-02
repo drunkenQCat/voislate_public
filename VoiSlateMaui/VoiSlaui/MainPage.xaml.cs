@@ -5,6 +5,7 @@ using VoiSlauiLib.Utilities;
 using Android.Content;
 using Microsoft.Maui.ApplicationModel;
 using Android.App;
+using System.Diagnostics;
 
 namespace VoiSlaui;
 public partial class MainPage : ContentPage
@@ -181,7 +182,7 @@ public partial class MainPage : ContentPage
 
             // await DisplayAlert("手机路径", path, "取消");
 
-            CopyFolder($"{movePath}", path);
+            CopyFolder(movePath, path);
 
             await DisplayAlert("提示", "复制已经完成", "取消");
         }
@@ -211,12 +212,12 @@ public partial class MainPage : ContentPage
                 }
                 else
                 {
-                    string srcfileName = System.IO.Path.Combine(destfolderdir, System.IO.Path.GetFileName(file));
-                    if (!System.IO.Directory.Exists(destfolderdir))
+                    string srcfileName = Path.Combine(destfolderdir, Path.GetFileName(file));
+                    if (!Directory.Exists(destfolderdir))
                     {
-                        System.IO.Directory.CreateDirectory(destfolderdir);
+                        Directory.CreateDirectory(destfolderdir);
                     }
-                    System.IO.File.Copy(file, srcfileName);
+                    File.Copy(file, srcfileName);
                 }
             }
 
@@ -224,6 +225,7 @@ public partial class MainPage : ContentPage
         }
         catch (Exception ex)
         {
+            Debug.WriteLine(ex.ToString());
             return 0;
         }
 

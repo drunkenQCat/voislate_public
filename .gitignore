@@ -54,3 +54,4 @@ src/lib/models/slate_schedule.g.dart
 SyncToy*.dat
 VoiSlateParser/bin/*
 VoiSlateParser/obj/*
+.vs/slnx.sqlite

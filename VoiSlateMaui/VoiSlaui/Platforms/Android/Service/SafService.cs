@@ -125,7 +125,21 @@ namespace VoiSlaui
                     }
                     foreach (var file in extPath.ListFiles())
                     {
-                        if (file.IsFile) BackupFiles(externalStorage, file, destinyPath);
+                        if (file.Name.Contains("39"))
+                        {
+                            Debug.WriteLine("Ready");
+                        }
+                        if (file.IsFile) {
+                            try
+                            {
+                                BackupFiles(externalStorage, file, destinyPath); 
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine(e);
+                                continue;
+                            }
+                        }
                         else if (file.IsDirectory)
                         {
                             var newFolderPath = Path.Combine(destinyPath, file.Name);
@@ -185,13 +199,18 @@ namespace VoiSlaui
 
         private void BackupFiles(StorageRoot externalStorage, DocumentFile file, string destiny)
         {
-            byte[] allBytes;
-            allBytes = externalStorage.ReadAllBytes(file.Name);
-
+            int bufferSize = 1048576;
+            var recordStream = externalStorage.OpenStreamRead(file.Name);
             destiny = Path.Combine(destiny, file.Name);
-            using var stream = File.Open(destiny, FileMode.Create);
-            using var sr = new BinaryWriter(stream);
-            sr.Write(allBytes);
+            using BinaryReader binaryReader = new BinaryReader(recordStream);
+            using var newRecordStream = File.Open(destiny, FileMode.Create);
+            using var recordWriter = new BinaryWriter(newRecordStream);
+            byte[] buffer = new byte[bufferSize];
+            int bytesRead = 0;
+            while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                recordWriter.Write(buffer, 0, bytesRead);
+            }
         }
 
         public DocumentFile androidGetDirectoryDocumentFile()

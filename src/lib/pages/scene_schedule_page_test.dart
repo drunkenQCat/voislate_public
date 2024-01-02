@@ -1,16 +1,9 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:voislate/helper/schedule_csv_parser.dart';
-import 'package:voislate/models/slate_log_item.dart';
 import 'package:voislate/providers/slate_status_notifier.dart';
-import 'package:voislate/providers/slate_log_notifier.dart';
 
 import '../models/slate_schedule.dart';
 import '../../widgets/scene_schedule_page/note_editor.dart';
@@ -448,8 +441,12 @@ class SceneSchedulePageTestState extends State<SceneSchedulePageTest>
                         await FilePicker.platform.pickFiles();
 
                     if (result != null) {
-                      var newSche = parseCSVData(result.files.single.path!);
-                      await _saveBox(newSchedule: newSche.cast<ScheduleItem>());
+                      var newScnList = parseCSVData(result.files.single.path!);
+                      setState(() {
+                        scenes = newScnList;
+                      });
+                      await _saveBox(
+                          newSchedule: newScnList.cast<SceneSchedule>());
                     } else {
                       print("No file selected");
                     }
@@ -470,7 +467,7 @@ class SceneSchedulePageTestState extends State<SceneSchedulePageTest>
     );
   }
 
-  Future<void> _saveBox({List<ScheduleItem>? newSchedule}) async {
+  Future<void> _saveBox({List<SceneSchedule>? newSchedule}) async {
     var box = Hive.box('scenes_box');
     await box.clear();
     await box.addAll(newSchedule ?? scenes);
