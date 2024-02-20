@@ -4,3 +4,6 @@
 [submodule "VoiSlateMaui"]
 	path = VoiSlateMaui
 	url = https://github.com/drunkenQCat/VoiSlaui.git
+[submodule "VoiSlateParser"]
+	path = VoiSlateParser
+	url = https://github.com/drunkenQCat/VoiSlateParser.git
