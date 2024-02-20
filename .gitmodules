@@ -1,3 +1,6 @@
 [submodule "src"]
 	path = src
 	url = https://github.com/drunkenQCat/voislate.git
+[submodule "VoiSlateMaui"]
+	path = VoiSlateMaui
+	url = https://github.com/drunkenQCat/VoiSlaui.git
